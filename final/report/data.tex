@@ -1,0 +1,92 @@
+\chapter{Data Collection}\label{chap:data}
+
+
+As I said earlier, we'll get our data from Google Places. They provide data on lots of venues for free, although there are some restrictions on it. If you want to know how you can get this data, have a look at \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/intro_data.ipynb}{this notebook}. It will explain how I pull data from Google Places. 
+
+{\color{blue} So we are using banks, cinemas, colleges, gyms, hospitals, pubs, restaurants, schools, and supermarkets. Why these? What about auditoria or temples or police stations?}
+
+Because, reasons. 
+
+{\color{blue} What reasons?}
+
+Reasons. 
+
+{\color{blue} Which are...}
+
+Reasons.
+
+{\color{blue} Okay, I can see where this is going. Fine. All I care about is that this makes sense. Does it?}
+
+We'll know at the end. Look, if you paid me to do this for you, I would spend a few weeks researching on how best to do this. You're not. So I'm not. We will know at the end if any of this makes sense. We are using nine different kinds of venues. That's something. 
+
+{\color{blue} Fine.}
+
+
+\section{Data Sample}
+Here's what our data looks like. These are five existing sports facilities that are closest to the center of the city. 
+
+\input{../sports}
+
+{\color{blue} I see. Wait. What center of the city? I didn't know there was one.}
+
+Well, I didn't either. So I took it upon myself to nominate a place to be the center of the city. This makes my analysis a lot easier. I used the Buddha statue in Hussain Sagar lake as the center. If you look at the geometry of the city, the centroid does fall roughly near this point, so it's all good.
+
+{\color{blue} Wow. Okay. You're weird, you know that? I suppose the `Dist\_CC' column is for distance from this city center that you designated? }
+
+Yep. In metres. 
+
+
+{\color{blue} So, how did you get this data?}
+
+
+\section{Google Places API}
+
+Why, using Google of course. Not the way you're thinking of though. Google Places has an API which gives you different kinds of information when you submit different kinds of requests. Have a look at \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/intro_data.ipynb}{this notebook} for details on how to make these requests.
+
+The requests that I have used are called `Nearby Search' requests. These requests work like this. I specify a keyword and a location. The API returns venue information matching the keyword near the specified location. There are two ways to make this request. I can either specify a radius about the specified location, or ask for all results in increasing order of distance from the specified location. The first option restricts results by distance, the second sorts them by distance. I used the second. 
+
+{\color{blue} Because why?}
+
+Because, reasons. Don't look at me like that, this time there are reasons for doing this. Venues like banks or restaurants aren't uniformly distributed in the city. Google Places only returns 20 results per request, up to a total of 60 results for the specified location and keyword. If I use the first kind of `Nearby Search' request, it's easy to miss a lot of venues wherever they are densely packed. Unless I use a very fine grid for the search. A finer search grid takes too long to. Using the second kind of result sidesteps this issue. Again, go have a look at \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/intro_data.ipynb}{this notebook} for details.
+
+{\color{blue} You know what, I'll just leave it to you to worry about the details. We have information on lots of venues now. How many venues have we got?}
+
+\section{Number of venues}
+Let me put the numbers in a table. 
+
+\begin{tabular}{ll}
+\toprule
+Venue Category & Number of results \\
+\midrule
+Banks 		& 2281 \\
+Cinemas		& 287 \\
+Colleges 	& 1718 \\
+Gyms 		& 1325 \\
+Hospitals 	& 374 \\
+Pubs		& 664 \\
+Restaurants	& 309 \\
+Schools 	& 3993 \\
+Sports 		& 730  \\
+Supermarkets 	& 503 \\
+\bottomrule
+\end{tabular}
+
+{\color{blue} That doesn't look right. Just 309 restaurants and 374 hospitals int he city? And 503 supermarkets? Surely there are many more.}
+
+You are absolutely right. There are indeed a lot more supermarkets than 503. What I have done here is pick only a few chains of supermarkets -- More, Heritage Fresh, Reliance Fresh, Ratnadeep, and Big Bazaar. Because there are too many tiny supermarkets and just a lot of other stores labelled as supermarkets. Restricting our data to these few chains produces more consistency. After all, the presence or absence of a Heritage Fresh in the neighborhood does say something about the neighborhood. 
+
+It is the same for restaurants. I picked a few chains and then looked for the locations of every restaurant belonging to the chain -- MacDonald's, Subway, KFC, Pizza Hut, Domino's Pizza, Burger King, Paradise Biryani, and Karachi Bakery. 
+
+There is a different problem with hospitals. Apparently, a lot of the smaller clinics aren't tagged as hospitals in Google Places. Or they are tagged, but don't show up for some reason. Most of the hospitals returned by the API are the large multispeciality ones. Except in the outskirts in the city, where smaller clinics also show up.
+
+There is some inconsistency in the data. Some entries in supermarkets and restaurants don't actually belong to the chains I wanted to capture. The hospitals aren't all of the same size and scale. There are also a lot of non-sports-related venues in the data for sports facilities. Or sports retail stores. Overall, however, the relevant entries outnumber the irrelevant ones; so we're good to go.
+
+{\color{blue} I may be wrong here, but aren't you supposed to clean your data before using it to make predictions? I'm no data scientist, and even I know that.}
+
+Yep. I should. I will have to manually comb through the data and discard inappropriate entries. That is a boring and time-consuming process. If you were paying me to do this, I would have done that. For a pet project with no pay, this will have to do. As I said before, the number of appropriate datapoints is far greater than the number of inappropriate ones. 
+
+There's one other limitation, one I've already mentioned. A lot of places aren't indexed by Google Places. And some of the indexed places could be missing from the data because of the limitations on the number of results returned by the API. These are things that we'll just have to live with.  
+
+{\color{blue} Is there nothing we can do to fix these issues?}
+
+We could go look for data from other cities in India that could be similar to Hyderabad. It's not a lot of extra work, but it will increase the size of our datasets, and consequently the runtime. I may have a go at it at a later time, but not for now. 

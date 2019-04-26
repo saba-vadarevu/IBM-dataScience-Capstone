@@ -1,0 +1,44 @@
+\documentclass[11pt]{report}            % Report class in 11 points
+\input{pream}
+\parindent0pt  \parskip10pt             % make block paragraphs
+\raggedright                            % do not right-justify
+
+\title{\bf Battle of the Neighborhoods\\
+For a brand new sports facility in Hyderabad, India}  % Supply information
+\author{Sabarish Vadarevu}              %   for the title page.
+\date{\today}                           %   Use current date.
+
+\begin{document}                        % End of preamble, start of text.
+\maketitle                              % Print title page.
+\pagenumbering{roman}                   % roman page number for toc
+\setcounter{page}{2}                    % make it start with "ii"
+\tableofcontents                        % Print table of contents
+
+
+
+
+
+
+\begin{abstract}
+Highly populated cities like Hyderabad, India are in sore need of more sports facilities. Such facilities must be set up in suitable locations, lest they go unused and become too expensive to maintain. How do we find suitable locations? This question is answered in the present report. Venue data from Google Places API is used to find how locations of existing sports facilities are related to locations of other venues, such as restaurants, schools, gyms, etc... This relationship is then exploited to find other locations in the city that are most suitable for a new sports facility. 
+\end{abstract}
+
+
+
+\pagenumbering{arabic}                  % Start text with arabic 1
+
+
+\input{introduction}
+\input{methodology}
+\input{data}
+\input{preprocessing}
+\input{modelling}
+%\input{discussion}
+%\input{conclusion}
+%\input{references}
+
+\begin{appendices}
+\input{app_VenueData}
+\end{appendices}
+
+\end{document}

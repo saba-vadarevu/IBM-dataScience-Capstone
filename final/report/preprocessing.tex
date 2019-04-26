@@ -1,0 +1,29 @@
+\chapter{Preprocessing}\label{chap:preprocessing}
+
+{\color{blue} Are we ready to train the models then? }
+
+Not quite. Remember what we wanted to do with our models? We want to characterize neighborhoods using data on different venues located within and around the neighborhood. To do that, we need a way to pick out the venues that are close to any particular location. 
+
+{\color{blue} Is that hard to do?}
+
+Not at all. This is a common problem used in machine learning called `Nearest Neighbors Search'. There are a lot of software libraries that I can directly use to get this done, so we don't have to worry about how to implement it. Have a look at \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/preprocessing.ipynb}{this notebook} to see how I implement nearest neighbors search to find venues close to a specified location. 
+
+{\color{blue} Okay. Looks easy enough. So we are choosing 10 nearest neighbors. Why 10?}
+
+Because 10 is a nice number. Ten is actually an upperlimit. We will later try and see if we can get away with fewer venues when characterizing a neighborhood.
+
+{\color{blue} Fine. What is this about defining distances.}
+
+We use latitude and longitude to identify the location of any point in the city. We need a function to give us distances between two points given their latitudes and longitudes. There are, again, libraries that can do this for us. We need to keep the time taken to compute these distances to a minimum though, because we'll have to compute distances for a LOT of pairs of points. So, we define our own function that calculates approximate distances, but really fast. 
+
+{\color{blue} That makes sense. Are we ready to do the training then? }
+
+Relax man. We'll get there. If we want to train a model, we need datapoints. In our case, the datapoints will be lots of locations in the city, and the distances to nearest venues of different categories. Later, we will use these distances to create what we call `features' and `labels' that we use to train models. 
+
+We have a way to obtain distances to ten nearest venues of each venue category for any specified location. Now, we just have to pick out a whole bunch of locations that we want to use as datapoints. Obviously, we should use the locations of existing sports facilities. We want our models to know that the locations of existing sports facilities are suitable locations for sports facilities. If they weren't, these facilities would probably have been used for some other purpose. In addition to existing sports facilities, we will choose points randomly in the city. Again, the details are all in \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/preprocessing.ipynb}{this notebook}. The number of random points we'll use is ten times the number of existing sports facilities. Because, reasons.
+
+We have a lot of locations in the city. We have a method to obtain distances to ten nearest venues for each of this locations. We use this method. That produces a large dataset containing 8,030 locations and associated distances. We'll save a copy of this dataset on disk for later use. 
+
+{\color{blue} Since you've stopped, I'm assuming we are now ready to start training our models?}
+
+Indeed we are.

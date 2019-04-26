@@ -1,0 +1,84 @@
+\chapter{Modelling}
+
+
+\subsection{Targets}
+{\color{blue} Alright! Let's get training.}
+
+After just one little thing. There are two ways to do machine learning. Supervised and unsupervised. We will do supervised learning first. That means, we give the model a target to aim at. In unsupervised training, there isn't any target to aim at; we just want the model to group together different datapoints that look similar. 
+
+{\color{blue} What target do we want our model to be aiming at?}
+
+That is an important question. We want the target to reflect the suitability of a location for setting up a sports facility. Let's call this a ``suitability score''. We will have this suitablity score be between 0 and 1. If the suitability score is 0, then the location is unsuitable. If the suitability score is 1, then the location is highly suitable. 
+
+{\color{blue} Okay. What exactly is this suitability score?}
+
+That remains to be defined. I came up with this simple definition:
+\begin{equation}
+	\begin{aligned}
+		p_n(\text{sports}) &= \frac{1}{1+\frac{d_n(\text{sports})}{0.5}}, \\
+		S &= p_0(\text{sports}),
+	\end{aligned}
+\end{equation}
+where $d_n(\text{sports})$ is the distance to the $n^{th}$ closest sports venue, $p_n(\text{sports})$ is the `proximity' to the $n^{th}$ closest sports venue defined above, and $S$ is the suitability score. The suitability score is based on proximity to just to closest sports venue. Note that the subscript $n$ is zero-based, so a subscript zero means first closest venue. 
+
+For any location that coincides with the location of an existing sports facility, the suitability score is 1. 
+
+{\color{blue} I think I understand what's going on. Proximity is defined so that it always takes values between 0 and 1. Why do you have the factor $0.5$ though?}
+
+That acts to scale the distances. Basically, it makes proximity go to $0.5$ when the distance to the $n^{th}$ nearest venue is 0.5km. With regards to the suitability score, this means the score drops to 0.5 when we move to a location 0.5km away from an existing sports facility. It just feels nicer to have a scaling that makes sense to me. You are free to use a different scaling if you want. 
+
+{\color{blue} Would the results of the modelling change if we use different scaling factors?}
+
+Yes, they would. 
+
+{\color{blue} And let me guess. You don't want to try different scaling factors because I'm not paying you to do this.}
+
+Yep. 
+
+
+\subsection{Features}
+{\color{blue} We have a target to aim at. From what I understand, we also need some input to go into the model, yes?}
+
+
+Yes, we do. These inputs are called features. Usually, a lot of work goes into deciding what features to use. In fact, that is the reason we collected distances to 10 nearest venues for 9 different venue categories. We are hoping that all of these distances can provide a meaningful set of features that can adequately characterize neighborhoods. Should we use all of the 10 distances, or just a few? Or should we use `proximity' defined above? After all, proximite goes from 0 to 1, which is a nice property to have. 
+
+{\color{blue} Why are you asking me? I am absolutely clueless about what to use.}
+
+Unfortunately, so am I. We will try them all out. Specifically, I have defined four different functions, dist\_n, dist\_0\_n, prox\_n, and prox\_0\_n. These functions use the 9 sets of 10 distances for each location and spit out a vector. See \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/model_binary.ipynb}{this notebook} for details.  
+We will try to use feature vectors produced by each of these four functions and see which one gives us the best accuracy. 
+
+
+\section{Binary classification}
+
+{\color{blue} The notebook is called `model\_binary'. What's with the binary?}
+
+The binary refers to binary classification. In this kind of modelling, we say that our data belongs to two classes -- suitable locations, and unsuitable locations. We have to assign these labels when training our data. 
+
+{\color{blue} Let me guess. Locations with suitability scores less than 0.5 are unsuitable, and those with suitability scores greater than 0.5 are suitable?}
+
+Yep. To be precise, those with suitability score greater than \textbf{or equal to} 0.5 are suitable. There is this library called Scikit-learn that has models ready to go. I will spare you the details of getting these models to run. Suffice it to say that I tried all four feature functions for different `n', where `n' is the rank of the venue in terms of distance from the location. Some feature functions did better than others, but the overall performance wasn't so good.
+
+{\color{blue} Really?! I was getting excited about this. It sounded like it should really work.}
+
+Well, our problem just doesn't happen to suit binary classification. Remember how we collected a lot of random locations in the city to build a dataset? Most of these locations fall far from existing sports facilities, and are consequently labelled as unsuitable. There are a lot more of these locations than suitable locations. This imbalance makes it quite messy to have a reasonable accuracy with the model. 
+
+{\color{blue} Can't we just drop those extra points?}
+
+We can, but then the dataset we have will be very biased in terms of what neighborhoods it represents. We can't take a model trained on this dataset and expect it to make predictions on random locations in the city. 
+
+{\color{blue} How about adding more datapoints near existing sports facilities?}
+
+We could do that. But then all of the models we train will have a large error associated with them, and it becomes hard to compare models. 
+
+{\color{blue} So there's no way to fix this?}
+
+I'm not sure. To be honest, I just don't want to do this binary classification. Ultimately, we want don't want just any suitable location, we want the most suitable location. That is, we want our locations to be ranked in terms of suitability scores. If we are aiming for a continuous target to facilitate ranking, then using binary classification isn't the best idea. 
+
+{\color{blue} Didn't you have some probabilities associated with the predictions?}
+
+Yes, there are probabilities associated with the predictions. And you are right, we can find the locations with the greatest probability. It just feels a bit too artificial though, to assign discrete labels, and then rank them on probability. We might as well skip this step and just work with continuous targets all the way. 
+
+{\color{blue} Alright. What's the next step then?}
+
+
+\section{Linear Regression}

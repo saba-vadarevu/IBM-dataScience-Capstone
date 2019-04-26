@@ -1,0 +1,77 @@
+\chapter{Methodology}\label{chap:methodology}
+
+
+Vijay: Right. Let's get down to business before the booze gets to us. 
+
+{\color{blue} Ajay: Good. What are we talking about?}
+
+I will outline how we will approach this problem. The actual problem-solving will come later. But first, we must establish the expect outcomes for this little project. 
+
+{\color{blue} Yes. We want to identify a location to build a sports facility.}
+
+Almost. We will have to be more specific though. Here's how I will define it. 
+
+\section{Problem statement}
+
+\textbf{Problem statement:} Identify a set of locations that are most suitable to establish a new sports facility in Hyderabad. The suitability of a location is expressed as a suitability score that lies between 0 and 1, 0 indicating an unsuitable location, and 1 indicating a highly suitable location. To this end, we will train models that capture the relationship between the suitability score for a location and the distance to other points of interest in the vicinity. The trained model will later be used to find locations that maximize the suitability.
+
+{\color{blue} I am a bit lost. Can we break this down into simpler parts? }
+
+Okay. Let me draw this out in a flowchart. 
+
+\section{Strategy}
+\begin{tikzpicture}[node distance = 3cm]
+	\node (start) [startstop] {Start};
+	\node (data) [io, below of=start, yshift=1cm] {Venue Data};
+	\node (distance) [ioq, left of=data, yshift=-1.5cm] {Define distances};
+	\node (preproc) [process, below of=data] {Nearest venues};
+	\node (features) [process, below of=preproc, yshift=1cm] {Feature selection};
+	\node (models) [process, below of=features, yshift=1cm] {Train models};
+	\node (evaluate) [process, below of=models, yshift=1cm] {Evaluate models};
+	\node[draw=red, fit=(features) (models) (evaluate)] (modelling) {};
+	\node[left] at (modelling.west) {Modelling};
+
+	\draw [arrow] (models) -- (evaluate);
+	\draw [arrow] (evaluate) -- (models);
+	\draw [arrow] (start) -- (data);
+	\draw [arrow] (data) -- (preproc);
+	\draw [arrow] (distance) -- (preproc);
+	\draw [arrow] (preproc) -- (features);
+	\draw [arrow] (features) -- (models);
+	\draw [arrow] (models) -- (features);
+
+
+	\node (init) [ioq, right of=preproc, xshift=4cm] {Initialize search locations};
+	\node (predict) [process, below of=init, yshift=1cm] {Predict scores};
+	\node (optimize) [process, below of=predict, yshift=1cm] {Maximize scores};
+	\node (filter) [process, below of=optimize, yshift=1cm] {Filter locations};
+	\node (stop) [startstop, below of=filter, yshift=1cm] {Profit! \$\$};
+	\node[draw=red, fit=(predict) (optimize)] (optimizer) {};
+	\node[left] at (optimizer.west) {Optimization};
+
+	\draw [arrow] (modelling) -- (optimizer);
+	\draw [arrow] (init) -- (predict);
+	\draw [arrow] (predict) -- (optimize);
+	\draw [arrow] (optimize) -- (filter);
+	\draw [arrow] (filter) -- (stop);
+\end{tikzpicture}
+
+
+Let me run you through the flowchart. We first collect data on all kinds of venues from Google Places. You know Google Places, right? That's the system that gets Google Maps to work. We find locations of places like restaurants, gyms, banks, pubs, etc... 
+
+{\color{blue} I'll stop you there for a bit. Why do we care about gyms and banks and pubs? What do their locations have to do with a sports facility?}
+
+I'm glad you asked. The ideal location for your new sports facility should be one that has good access to transport, is in a place with a reasonable population density, and isn't too expensive to lease. Or perhaps not. We don't know. We must do two things. First, we must figure out what qualities we want in a neighborhood to build the sports facility. Second, we must find neighborhoods with these qualities. These ``qualities'' that I just mentioned, what could they be? I think that the distribution of venues such as supermarkets, pubs, restaurants, gyms, etc... are a good proxy for these qualities. 
+
+{\color{blue} I see. So we look at other venues of interest to characterize neighborhoods. I guess the modelling part of it is to express this characterization in a mathematical model. Yes?}
+
+Exactly. We don't know how to characterize neighborhoods. Is having lots of banks a good thin? What about colleges? Should there be lots of restaurants and no gyms? We'll let our model figure all of that out. 
+
+{\color{blue} What's with the little ``Define distances"? And the boxes on the right?}
+
+Ignore that ``Define distances" box. That's for the nerds. The chart on the left is for the first part I mentioned earlier -- figuring out what qualities we want in a neighborhood. We use data on existing sports facilities to work this out. Once we have all of that information built into a model, we go look for neighborhoods that maximize these qualities. That is what the chart on the right does. It takes the model we built, and work its way through lots of locations in the city. This optimization part spits out a bunch of locations that are most suitable for the sports facility. You can then take this to your partners and investors to sort out the specifics. 
+
+{\color{blue} I understand. Kind of. Can we get into the details of the boxes?}
+
+
+Next time. It's better to show than tell. In the meantime, have a look at \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/intro_data.ipynb}{this notebook} if you want more details on how it's done.
