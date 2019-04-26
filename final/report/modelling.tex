@@ -1,5 +1,8 @@
 \chapter{Modelling}
 
+\subsection{Train-Test Split}
+It's best to always set aside a part of the dataset for testing. In our case, I've left 10\% of the data aside for testing. That's 803 points. Not a bad number for testing. 
+
 
 \subsection{Targets}
 {\color{blue} Alright! Let's get training.}
@@ -33,7 +36,14 @@ Yes, they would.
 
 {\color{blue} And let me guess. You don't want to try different scaling factors because I'm not paying you to do this.}
 
-Yep. 
+Yep. I have plotted the locations in the test set, colored by their suitability score, in fig. \ref{fig:datapoints-test}. Locations closer to the city center have greater suitability scores in general, although there are quite a few towards the edges as well. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.95\linewidth]{datapoints_test.png}
+	\caption{Locations of datapoints in the test set, colored by suitability scores $S$. Blue is for $S=0$, and red for $S=1$. \label{fig:datapoints-test}}
+\end{figure}
+
 
 
 \subsection{Features}
@@ -82,3 +92,80 @@ Yes, there are probabilities associated with the predictions. And you are right,
 
 
 \section{Linear Regression}
+
+I'm feeling a bit under the weather today. But don't worry, I got the job done. Go read it all in \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/model_continuous.ipynb}{this notebook}
+
+{\color{blue} Sure. Should you still be in a pub if you're sick?}
+
+I'm not that sick. And a bit of booze tends to make me feel better. 
+
+{\color{blue} Yea, right. Why do I feel like you're just tired of explaining this to me?}
+
+Are you saying that after writing all of that code and all of those comments and remarks in the notebook, I can't be bothered now to explain it all to you? Of course not! I love repeating stuff I've already written somewhere else. It's just that I'm a bit tired today. 
+
+{\color{blue} Okay, fine. I understand. I'll just go read that notebook thingy.
+
+What is this $R^2$ that keeps appearing in the notebook?}
+
+That is a measure of the model's accuracy. It tells you how much of the true target's variation about its mean is explained by the model. An $R^2$ of 1 means that the model perfectly explains the variability. An $R^2$ of 0 means the model explains none of it and is absolute trash. 
+
+{\color{blue} Let me see. We got to an $R^2$ of 0.5 for the simple linear regression. That means half of the variability is explained. Is that good enough?}
+
+Maybe. It's hard to tell, really. Unless we have some other model to compare against. In any case, $R^2=0.5$ isn't particularly bad. 
+
+{\color{blue} Do we have some other model to compare against then?}
+
+Yup. We'll use a few feedforward neural networks to see if we can do better.
+
+
+
+
+\section{Feedforward Neural Networks}
+
+{\color{blue} Ooh. Neural networks. I always wanted to get in on neural networks. What do they do?}
+
+Don't get too excited. They're not all that different from simple linear regression. We just have lots of different units that each do their own simple linear regression. Then we pass the output of this regression through a simple non-linear function. The idea is that putting together a bunch of these units will help us capture a wide variety of non-linear functions without having to actually use a lot of non-linear functions. 
+
+{\color{blue} I don't know if I should be more excited or less excited. Anyway, how do we do these neural networks?}
+
+Existing libraries, of course. Scikit-learn, the one we used for linear regression, also allows using neural networks. We'll use the simplest case first, a single layer perceptron. Unfortunately, I'm a bit tired today as well, so just have a look at the notebook.
+
+{\color{blue} Okay, I've had a read. So now we got to $R^2=0.74$ on the test set. That's significant increase from the linear regression. I suppose. }
+
+Indeed it is. The predictions and the errors on the training and test sets are shown in fig. \ref{fig:MLP-preds-errors}. There could be other networks that provide better accuracies, but we'll stop with the Multilayer Perceptron with 3 hidden layers for now. We'll use this model for the optimization. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{\linewidth}
+		\includegraphics[width = 0.95\linewidth]{MLP_preds.jpg}
+		\caption{Predictions and true targets}
+	\end{subfigure}
+	\begin{subfigure}{\linewidth}
+		\includegraphics[width = 0.95\linewidth]{MLP_errors.jpg}
+		\caption{Errors}
+	\end{subfigure}
+	\caption{Predictions and errors in the target values for the Multilayer perceptron with 3 hidden layers with (100,20,5) hidden units. \label{fig:MLP-preds-errors}}
+\end{figure}
+
+
+\section{Clustering}
+
+{\color{blue} Didn't you say something about unsupervised learning earlier?}
+
+Yes, I did. In unsupervised learning, we usually group together datapoints that ``look'' similar. This is called Clustering; there are other kinds of unsupervised learning, but we're not interested in those. Even clustering is not very relevant to our little project though. Remember what I said about wanting to rank locations by suitability? It is hard to do that with clustering. The best we can do is to find locations that somehow look similar to the locations of existing sports facilities. 
+
+{\color{blue} Can we give it a go then?}
+
+I did try doing it. Clustering works best when the datapoints we are interested in are neatly separated in terms of features from the other datapoints. Unfortunately, in our case, there isn't such nice separation. Things are all smooth and continuous, so it isn't very sensible to separate datapoints into different clusters. Have a look at fig. \ref{fig:cluster_4_prox_0} which shows clustering when proximity to nearest venue of each category is used as the feature vector. In the figure on the left, we would have liked to see short horizontal lines. The long lines mean that the clusters contain locations with a wide range of suitability scores, which isn't good news. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.95\linewidth]{cluster_4_prox_0.png}
+	\caption{Clustering with K-Means, using 4 clusters and proximities to nearest venue of each category (except sports) as feature vector. \label{fig:cluster_4_prox_0}}
+\end{figure}
+
+
+
+{\color{blue} So.. We give up on this?}
+
+Yep. We have the multilayer perceptron working for us though, so don't worry about this one. 

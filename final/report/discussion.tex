@@ -1,0 +1,24 @@
+\chapter{Conclusion}\label{chap:conclusion}
+
+{\color{blue} What am I missing then?}
+
+Any machine learning model is only as good as the data that goes into it. We tried a few different things in terms of features, but we didn't pay a lot of attention to the targets -- the suitability score. 
+
+{\color{blue} It makes sense to use a suitability score that goes from 0 to 1. What's wrong with that?}
+
+The problem is with the way we assigned suitability scores to datapoints. We used proximity to nearest sports venue. I argued that if a sports facility exists at a location, it means that the location is suitable. That's not the strongest argument. 
+
+Sports facilities associated with governmental organizations usually have little to do with profitability. There are also a lot of isolated tennis courts and such that are in our dataset. Land allocation is sticky. Businesses can go bankrupt and give way to others, but sports facilities in governmental organizations, schools, parks, etc... are not subject to the profitability or suitability of the sports facility itself. Rather, they depend on the success of the larger facility that they are part of. 
+
+We assigned low suitability scores to locations that are far from existing sports facilities. Do you see the contradiction here?
+
+{\color{blue} Hmmm.. I think I do. There are no suitable locations in the city, except for those that are already occupied by sports facilities. So the model is designed to fail from thestart.}
+
+Not completely. There is bound to be a lot of noise in any data. Existing sports facilities are not ideally distributed. And some locations that are suitable for a sports facility are currently unoccupied. We hope that when we supply sufficient data to a reasonably simple model, then all of this noise is smoothened out. In the predictions of the model, some of the existing sports facilities will have a suitability score less than 1, and some locations that are sufficiently far from existing facilities will have a score very close to 1. 
+
+
+{\color{blue} We hope that would happen, but it is not guaranteed.}
+
+Indeed. But that is the best we can do for now. So, go ahead and pitch this to your investors, but remember the shortcomings of the whole thing. 
+
+{\color{blue} Will do. Cheers!}

@@ -10,7 +10,16 @@ Not at all. This is a common problem used in machine learning called `Nearest Ne
 
 {\color{blue} Okay. Looks easy enough. So we are choosing 10 nearest neighbors. Why 10?}
 
-Because 10 is a nice number. Ten is actually an upperlimit. We will later try and see if we can get away with fewer venues when characterizing a neighborhood.
+Because 10 is a nice number. Ten is actually an upperlimit. We will later try and see if we can get away with fewer venues when characterizing a neighborhood. 
+
+Gathering the 10 nearest neighbors for each venue category (except sports) looks something like fig. \ref{fig:nearest-neighbors}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.95\linewidth]{nearestVenues_illustration.png}
+	\caption{Illustration of nearest venues. Red balloon marker shows query location, and circles of different colors show venues of different categories. \label{fig:nearest-neighbors}}
+\end{figure}
+
 
 {\color{blue} Fine. What is this about defining distances.}
 

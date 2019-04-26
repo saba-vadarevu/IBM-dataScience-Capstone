@@ -49,7 +49,7 @@ The requests that I have used are called `Nearby Search' requests. These request
 
 Because, reasons. Don't look at me like that, this time there are reasons for doing this. Venues like banks or restaurants aren't uniformly distributed in the city. Google Places only returns 20 results per request, up to a total of 60 results for the specified location and keyword. If I use the first kind of `Nearby Search' request, it's easy to miss a lot of venues wherever they are densely packed. Unless I use a very fine grid for the search. A finer search grid takes too long to. Using the second kind of result sidesteps this issue. Again, go have a look at \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/intro_data.ipynb}{this notebook} for details.
 
-{\color{blue} You know what, I'll just leave it to you to worry about the details. We have information on lots of venues now. How many venues have we got?}
+{\color{blue} You know what, I'll just leave it to you to worry about the details. We have information on lots of venues now. How many venues have we got? }
 
 \section{Number of venues}
 Let me put the numbers in a table. 
@@ -71,6 +71,14 @@ Supermarkets 	& 503 \\
 \bottomrule
 \end{tabular}
 
+For illustration, I plotted the locations of all of the existing sports facilities on a map in fig. \ref{fig:existing-sports}. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.95\linewidth]{existSports.png}
+	\caption{Locations of existing sports facilities in Hyderabad, from Google Places API\label{fig:existing-sports}}
+\end{figure}
+
 {\color{blue} That doesn't look right. Just 309 restaurants and 374 hospitals int he city? And 503 supermarkets? Surely there are many more.}
 
 You are absolutely right. There are indeed a lot more supermarkets than 503. What I have done here is pick only a few chains of supermarkets -- More, Heritage Fresh, Reliance Fresh, Ratnadeep, and Big Bazaar. Because there are too many tiny supermarkets and just a lot of other stores labelled as supermarkets. Restricting our data to these few chains produces more consistency. After all, the presence or absence of a Heritage Fresh in the neighborhood does say something about the neighborhood. 
@@ -90,3 +98,4 @@ There's one other limitation, one I've already mentioned. A lot of places aren't
 {\color{blue} Is there nothing we can do to fix these issues?}
 
 We could go look for data from other cities in India that could be similar to Hyderabad. It's not a lot of extra work, but it will increase the size of our datasets, and consequently the runtime. I may have a go at it at a later time, but not for now. 
+

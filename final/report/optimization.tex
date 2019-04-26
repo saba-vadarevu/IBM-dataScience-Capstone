@@ -1,0 +1,54 @@
+\chapter{Optimization}\label{chap:optimization}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width = 0.95\linewidth]{optLoc_cityCenter.png}
+	\caption{Optimal location (balloon marker) in a 3km x 3km box around the city center, and its nearest venues of each category (circles of different colors). \label{fig:optLoc-citycenter}}
+\end{figure}
+
+{\color{blue} Are we ready to pick out the most suitable locations in the city to set up my sports facility?}
+
+Yes. We are. 
+
+{\color{blue} How do we do this?}
+
+Optimization is a mature field of study, so there are a lot of libraries that help us do this. I was planning on doing this not-so-fancy thing called gradient descent.
+
+{\color{blue} Sounds fancy to me.}
+
+I doesn't matter, because I realized that for our problem, we can brute-force our way through loads of locations in the city. What we will do is pick several hundred random locations in the city. We define a 3km x 3km rectangular box centered at each of these locations. Within this 3km x 3km box, we find the location with the highest suitability score within the box, accurate to 250 m. And repeat for each location. Again, it's all in \href{https://github.com/saba-vadarevu/IBM-dataScience-Capstone/blob/master/final/optimization.ipynb}{this notebook}.
+
+For instance, the optimal location in the box centered at the city center is shown in fig. \ref{optLoc-citycenter} along with its nearest neighbors. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width = 0.95\linewidth]{optLocs_byDistToCC.png}
+	\caption{Locally optimal locations in the city with suitability scores greater than 0.7, colored by distance (normalized within dataset) to closest sports facility; blue for closest, red for farthest. \label{fig:optLocs-all}}
+\end{figure}
+
+
+{\color{blue} Why do the random thing? Can't we just search over every location in the city using a huge rectangular grid? }
+
+We could, but not in a single go. That would give us just one location with the greatest score for the entire city. That's not a good idea, because this one location may coincide with an existing sports facility, or be in a lake or a ditch or in some bigshot's house. Instead, if we do the random thing, we will cover a lot of locations in the city and find the most suitable locations locally. 
+
+Once we have several hundred of these locally optimal locations, we filter out locations that have suitability scores smaller than 0.7. We will have a lot of these because we are searching all over the city. These locations are shown in fig. \ref{fig:optLocs-all}
+
+
+
+For the final set of suitable locations, we rank them in terms of decreasing distance to nearest existing sports facility. Because we don't want to build our new facility next door to an existing one. The top twenty of these locations are shown in fig. \ref{fig:optLocs-twenty}.
+
+
+{\color{blue} Yup. Makes sense. Let me see. So that gives us 8 locations that are at least a km away from the nearest sports facility. And 3 locations that are at least a kilometer and a half away. That sounds reasonable. Is this the best we can do?}
+
+We could try initializing the optimization with a greater number of random locations. I'm happy with what we have though.
+
+{\color{blue} Okay, cool. I think I have a decent case to pitch to my investors. I can't avoid this feeling that there's something missing from the whole thing though.}
+
+Well, there are indeed a couple of things. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width = 0.95\linewidth]{twentyLocs_farthestFromSports.png}
+	\caption{Twenty locally optimal locations in the city with suitability scores greater than 0.7 that are farthest from existing sports facilities. \label{fig:optLocs-twenty}}
+\end{figure}
+
